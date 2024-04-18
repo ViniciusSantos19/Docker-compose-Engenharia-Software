@@ -1,6 +1,19 @@
 version: '3'
 
 services:
+  db:
+    image: postgres:14.2-alpine
+    container_name: myapp-postgres-14.2
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    command: postgres -c 'max_connections=500'
+    environment:
+      POSTGRES_DB: microservico_estoque_development
+      POSTGRES_USER: vinicius
+      POSTGRES_PASSWORD: 123
+    ports:
+      - "5433:5433"
+
   cda_postgres:
     image: postgres:14.2-alpine
     restart: always
@@ -14,6 +27,22 @@ services:
     ports:
       - "5432:5432"
 
+  microservico-estoque:
+    image: viniciusr21/mc-rails123:incompleto
+    env_file: .env
+    command: "bundle exec rails s -p 3000 -b '0.0.0.0'"
+    environment:
+      DB_HOST: db
+      DB_NAME: microservico_estoque_development
+      DB_USERNAME: vinicius
+      DB_PASSWORD: 123
+    volumes:
+      - .:/app:cached
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
   microservico-validacao:
     image: itsamemarcus/inf-016:latest
     ports:
@@ -23,4 +52,8 @@ services:
 
 volumes:
   postgres_data:
+
+networks:
+  default:
+    name: myapp_default
 
