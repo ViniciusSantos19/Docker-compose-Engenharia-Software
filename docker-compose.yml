@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  cda_postgres:
+    image: postgres:14.2-alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    command: postgres -c 'max_connections=500'
+    environment:
+      POSTGRES_DB: cda-db
+      POSTGRES_USER: administrador
+      POSTGRES_PASSWORD: "microservAuth2024"
+    ports:
+      - "5432:5432"
+
+  microservico-validacao:
+    image: itsamemarcus/inf-016:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - cda_postgres
+
+volumes:
+  postgres_data:
+
