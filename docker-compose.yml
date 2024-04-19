@@ -28,7 +28,7 @@ services:
       - "5432:5432"  # Mantendo a porta 5432 do host para 5432 do contêiner
 
   microservico-estoque:
-    image: viniciusr21/mc-rails123:incompleto
+    image: viniciusr21/mc-rails123:atualizado
     env_file: .env
     command: "bundle exec rails s -p 3000 -b '0.0.0.0'"
     environment:
