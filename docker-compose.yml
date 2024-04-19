@@ -3,29 +3,29 @@ version: '3'
 services:
   db:
     image: postgres:14.2-alpine
-    container_name: myapp-postgres-14.2
+    container_name: db-estoque
+    restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    command: postgres -c 'max_connections=500'
     environment:
       POSTGRES_DB: microservico_estoque_development
       POSTGRES_USER: vinicius
       POSTGRES_PASSWORD: 123
     ports:
-      - "5433:5433"
+      - "5434:5432"  # Mapeando a porta 5434 do host para 5432 do contêiner
 
   cda_postgres:
     image: postgres:14.2-alpine
     restart: always
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    command: postgres -c 'max_connections=500'
+      - cda_postgres_data:/var/lib/postgresql/data
+    command: postgres -c 'max_connections=501'
     environment:
       POSTGRES_DB: cda-db
       POSTGRES_USER: administrador
       POSTGRES_PASSWORD: "microservAuth2024"
     ports:
-      - "5432:5432"
+      - "5432:5432"  # Mantendo a porta 5432 do host para 5432 do contêiner
 
   microservico-estoque:
     image: viniciusr21/mc-rails123:incompleto
@@ -52,6 +52,7 @@ services:
 
 volumes:
   postgres_data:
+  cda_postgres_data:
 
 networks:
   default:
